@@ -1,7 +1,10 @@
+import { IsString, IsInt, IsDate } from 'class-validator';
+
 export class CreateOrderDto  {
-    readonly customerID: number;
-    readonly orderDate: Date;
-    readonly price: number;
-    readonly status: string;
+    
+    @IsInt({message: 'Value must be a number'}) readonly customerID: number;
+    @IsDate({message: 'Value must be a date'}) readonly orderDate: Date;
+    @IsInt({message: 'Value must be a number'}) readonly price: number;
+    @IsString({message: 'Value must be a string'}) readonly status: string;
 }
   

@@ -2,14 +2,15 @@ import { Controller, Get, Res, HttpStatus, NotFoundException, Put, Post, Body, P
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { ValidateObjectId } from './shared/pipes/validate-object-id.pipes';   
+import { ValidateObjectId } from './shared/pipes/validate-object-id.pipe';
+import { ValidationPipe } from './shared/pipes/validation.pipe';   
 
 @Controller('order')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
   @Post()
-  async create( @Res() res , @Body() createOrderDto: CreateOrderDto) {
+  async create( @Res() res , @Body(new ValidationPipe()) createOrderDto: CreateOrderDto) {
     const newOrder = await  this.ordersService.create(createOrderDto);
     return res.status(HttpStatus.OK).json({ message: "Order has been created successfully!", order: newOrder });
   }
@@ -28,7 +29,7 @@ export class OrdersController {
   }
 
   @Put('/:id/update')
-  async update( @Res() res, @Param('id', new ValidateObjectId()) id: any, @Body() updateOrderDto: UpdateOrderDto) {      
+  async update( @Res() res, @Param('id', new ValidateObjectId()) id: any, @Body(new ValidationPipe()) updateOrderDto: UpdateOrderDto) {      
     const updatedOrder = await this.ordersService.update(id, updateOrderDto);
     return res.status(HttpStatus.OK).send({message: 'Update order successfully', order : updatedOrder});
   }
