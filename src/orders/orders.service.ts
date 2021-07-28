@@ -20,17 +20,17 @@ export class OrdersService {
     return this.orderModel.find().exec();
   }
 
-  async findOne(orderID): Promise<Order> {
+  async findOne(orderID: number): Promise<Order> {
     const order = await this.orderModel.findById(orderID).exec();    
     return order;  
   }
 
-  async update(orderID, updateOrderDto: UpdateOrderDto): Promise<Order> {
+  async update(orderID: number, updateOrderDto: UpdateOrderDto): Promise<Order> {
     const updatedOrder = await this.orderModel.findByIdAndUpdate(orderID, updateOrderDto, { new: true });  
     return updatedOrder;   
   }
 
-  async remove(orderID): Promise<any> {
+  async remove(orderID: number): Promise<any> {
     const deletedOrder = await this.orderModel.findByIdAndRemove(orderID);         
     return deletedOrder; 
   }

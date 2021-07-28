@@ -1,41 +1,48 @@
-import { Controller, Get, Res, HttpStatus, NotFoundException, Put, Post, Body, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Res, HttpStatus, NotFoundException, Put, Post, Body, Param, Delete, UseGuards } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { ValidateObjectId } from './shared/pipes/validate-object-id.pipe';
-import { ValidationPipe } from './shared/pipes/validation.pipe';   
+import { ValidateObjectId } from '../shared/pipes/validate-object-id.pipe';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Response } from 'express';   
+
 
 @Controller('order')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
-  async create( @Res() res , @Body(new ValidationPipe()) createOrderDto: CreateOrderDto) {
+  async create( @Res() res: Response , @Body() createOrderDto: CreateOrderDto) {
     const newOrder = await  this.ordersService.create(createOrderDto);
-    return res.status(HttpStatus.OK).json({ message: "Order has been created successfully!", order: newOrder });
+    return res.status(HttpStatus.CREATED).json({ message: "Order has been created successfully!", order: newOrder });
   }
 
-  @Get('allOrders')
-  async findAll( @Res() res ) {
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  async findAll( @Res() res: Response ) {
     const orders = await this.ordersService.findAll();
     return res.status(HttpStatus.OK).json(orders); 
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('/:id')
-  async findOne( @Res() res , @Param('id', new ValidateObjectId()) id: any) {
+  async findOne( @Res() res: Response , @Param('id', new ValidateObjectId()) id: any) {
     const order = await  this.ordersService.findOne(id);
     if (!order) throw new NotFoundException('Order does not exist!');         
     return res.status(HttpStatus.OK).json(order);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Put('/:id/update')
-  async update( @Res() res, @Param('id', new ValidateObjectId()) id: any, @Body(new ValidationPipe()) updateOrderDto: UpdateOrderDto) {      
+  async update( @Res() res: Response, @Param('id', new ValidateObjectId()) id: any, @Body() updateOrderDto: UpdateOrderDto) {      
     const updatedOrder = await this.ordersService.update(id, updateOrderDto);
     return res.status(HttpStatus.OK).send({message: 'Update order successfully', order : updatedOrder});
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete('/:id/delete')
-  async remove( @Res() res, @Param('id', new ValidateObjectId()) id: any) {
+  async remove( @Res() res: Response, @Param('id', new ValidateObjectId()) id: any) {
     await this.ordersService.remove(id);
     return res.status(HttpStatus.OK).send({message: 'Delete order successfully'});
   }
