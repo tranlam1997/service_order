@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, NestModule, MiddlewareConsumer} from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -8,6 +8,8 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { APP_PIPE } from '@nestjs/core';
 import { ValidationPipe} from './shared/pipes/validation.pipe'
+import { DuplicateCheckingMiddleware } from './shared/middlewares/check-duplicate-user.middleware'
+import { UserSchema } from './users/schemas/user.schema';
 
 
 @Module({
@@ -21,7 +23,8 @@ import { ValidationPipe} from './shared/pipes/validation.pipe'
     ),
     OrdersModule,
     AuthModule,
-    UsersModule
+    UsersModule,
+    MongooseModule.forFeature([{ name: 'User', schema: UserSchema }])
   ],
   controllers: [AppController],
   providers: [AppService,   {
@@ -29,4 +32,10 @@ import { ValidationPipe} from './shared/pipes/validation.pipe'
     useClass: ValidationPipe,
   }],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(DuplicateCheckingMiddleware)
+      .forRoutes('/register');
+  }
+}
