@@ -1,6 +1,5 @@
 import { IsString, Length, IsNotEmpty } from 'class-validator';
 
-
 export class LogInDto  {
      @IsNotEmpty()
      @IsString({message: 'Value must be a string'})
