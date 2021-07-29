@@ -1,10 +1,22 @@
-import { IsString, IsInt, IsDate } from 'class-validator';
+import { IsString, IsInt } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+
 
 export class CreateOrderDto  {
     
-    @IsInt({message: 'Value must be a number'}) readonly customerID: number;
-    @IsDate({message: 'Value must be a date'}) readonly orderDate: Date;
-    @IsInt({message: 'Value must be a number'}) readonly price: number;
-    @IsString({message: 'Value must be a string'}) readonly status: string;
+    @ApiProperty({
+        type: Date
+    })
+    readonly orderDate: Date;
+    @ApiProperty({
+        type: Number
+    })
+    @IsInt({message: 'Value must be a number'}) 
+    readonly price: number;
+    @ApiProperty({
+        type: String
+    })
+    @IsString({message: 'Value must be a string'}) 
+    readonly status: string;
 }
   

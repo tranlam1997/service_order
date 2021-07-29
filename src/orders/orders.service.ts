@@ -4,15 +4,26 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Order } from './interfaces/order.interface';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { User } from 'src/users/interfaces/user.interface';
 
 @Injectable()
 export class OrdersService {
   constructor(
     @InjectModel('Order') private readonly orderModel: Model<Order>,
+    @InjectModel('User') private readonly userModel: Model<User>
   ) {}
 
-  async create(createOrderDto: CreateOrderDto): Promise<Order> {
-    const createdOrder = new this.orderModel(createOrderDto);
+  async create(userID: string, createOrderDto: CreateOrderDto): Promise<Order> {
+    const { orderDate, status, price } = createOrderDto;
+    const user = await  this.userModel.findById(userID);
+    const createdOrder = new this.orderModel({
+      userID : userID,
+      orderDate : orderDate,
+      status: status,
+      price: price
+    }); 
+    user.orders.push(createdOrder._id);
+    await user.save();
     return createdOrder.save();
   }
 
