@@ -15,9 +15,8 @@ export class AuthService {
     const user = await this.usersService.findUser(username);
     if(user){
      passIsValid = await bcrypt.compare(pass, user.password);
-    }
-    if (user && passIsValid) {
-      return user;
+     if(passIsValid)
+     return user;
     }
     return null;
   }
@@ -25,6 +24,7 @@ export class AuthService {
   async login(user: any) {
     const payload = { username: user.username, userID: user._id};
     return {
+      message: 'Log in successfully',
       access_token: this.jwtService.sign(payload),
     };
   }

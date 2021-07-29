@@ -5,15 +5,17 @@ import { UpdateOrderDto } from './dto/update-order.dto';
 import { ValidateObjectId } from '../shared/pipes/validate-object-id.pipe';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Response } from 'express';   
-import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {GetUserAuthInfoRequest} from './interfaces/request.interface'
 
 @UseGuards(JwtAuthGuard)
 @ApiTags('user/order')
+@ApiBearerAuth()
 @Controller('user/order')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}
 
+  
   @Post()
   @ApiBody({
     type: CreateOrderDto

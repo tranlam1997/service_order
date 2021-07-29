@@ -1,10 +1,11 @@
 import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Order } from './interfaces/order.interface';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { User } from 'src/users/interfaces/user.interface';
+import { Order } from './schemas/order.schema';
+import { User } from 'src/users/schemas/user.schema';
+
 
 @Injectable()
 export class OrdersService {

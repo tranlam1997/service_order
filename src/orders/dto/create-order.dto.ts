@@ -3,7 +3,6 @@ import { ApiProperty } from '@nestjs/swagger';
 
 
 export class CreateOrderDto  {
-    
     @ApiProperty({
         type: Date
     })

@@ -4,10 +4,10 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ValidateObjectId } from '../shared/pipes/validate-object-id.pipe';
 import {  Response } from 'express';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 
-
+@ApiBearerAuth()
 @ApiTags('user')
 @Controller('user')
 export class UsersController {
