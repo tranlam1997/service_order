@@ -6,10 +6,11 @@ import { OrdersModule } from './orders/orders.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
-import { APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { ValidationPipe} from './shared/pipes/validation.pipe'
 import { DuplicateCheckingMiddleware } from './shared/middlewares/check-duplicate-user.middleware'
 import { UserSchema } from './users/schemas/user.schema';
+import { HttpExceptionFilter } from './shared/filters/http-exception.filter';
 
 
 @Module({
@@ -30,7 +31,12 @@ import { UserSchema } from './users/schemas/user.schema';
   providers: [AppService,   {
     provide: APP_PIPE,
     useClass: ValidationPipe,
-  }],
+  },
+  {
+    provide: APP_FILTER,
+    useClass: HttpExceptionFilter,
+  }
+],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { HttpExceptionFilter } from './shared/filters/http-exception.filter';
 import { ValidationPipe} from './shared/pipes/validation.pipe'
 
 async function bootstrap() {
@@ -16,6 +17,7 @@ async function bootstrap() {
   SwaggerModule.setup('shopping/api', app, document);
   app.enableCors();
   app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalFilters(new HttpExceptionFilter());
   await app.listen(3000);
 }
 bootstrap();
