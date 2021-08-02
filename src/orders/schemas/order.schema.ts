@@ -5,7 +5,7 @@ import { Document } from 'mongoose';
 export type OrderDocument = Order & Document;
 
 @Schema()
-export class Order {
+ export class Order {
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User'})
     userID: mongoose.Schema.Types.ObjectId;
 

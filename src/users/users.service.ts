@@ -4,48 +4,49 @@ import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
+import { OrderDocument } from 'src/orders/schemas/order.schema';
+import { User, UserDocument } from './schemas/user.schema';
 import * as mongoose from 'mongoose';
-import { Order } from 'src/orders/schemas/order.schema';
-import { User } from './schemas/user.schema';
+
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectModel('User') private readonly userModel: Model<User>,
-    @InjectModel('Order') private readonly orderModel: Model<Order>
+    @InjectModel('User') private readonly userModel: Model<UserDocument>,
+    @InjectModel('Order') private readonly orderModel: Model<OrderDocument>
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto) : Promise<User> {
     const { name , username, password, email } = createUserDto;
     const hashPass = await bcrypt.hash(password, +process.env.SALT);
-    const createdUser = new this.userModel({name : name, username: username, password: hashPass, email: email});
+    const createdUser = new this.userModel({_id: new mongoose.Types.ObjectId, name : name, username: username, password: hashPass, email: email});
     return createdUser.save();
   }
 
-  async findAll() {
+  async findAll() : Promise<User[] | undefined> {
     return this.userModel.find().populate('orders').exec();
   }
 
-  async findOne(userID: number) {
+  async findUserById(userID: string): Promise<User | undefined> {
     const user = await this.userModel.findById(userID).populate('orders').exec();    
     return user;  
   }
 
 
-  async findUser(username: string): Promise<User | undefined>{
+  async findUserByUsername(username: string): Promise<User | undefined>{
     const user = await this.userModel.findOne({username : username}).exec();
     return user;
 
   }
 
-  async update(userID: number, updateUserDto: UpdateUserDto) {
-    const updatedUser = await this.userModel.findByIdAndUpdate(userID, updateUserDto, { new: true });  
+  async updateUser(userID: string, updateUserDto: UpdateUserDto) : Promise<User> {
+    const updatedUser = await this.userModel.findByIdAndUpdate(userID, updateUserDto, { new: true, useFindAndModify: false });  
     return updatedUser; 
   }
 
-  async remove(userID: number) {
-    const deletedUser = await this.userModel.findByIdAndRemove(userID);
-    await this.orderModel.remove({ userID : userID});   
+  async deleteUser(userID: any): Promise<any> {
+    const deletedUser = await this.userModel.findByIdAndRemove(userID, {useFindAndModify: false});
+    await this.orderModel.deleteOne({ userID : userID});   
     return deletedUser; 
   }
 }

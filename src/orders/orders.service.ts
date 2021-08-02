@@ -3,15 +3,16 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { Order } from './schemas/order.schema';
-import { User } from 'src/users/schemas/user.schema';
+import { Order,OrderDocument } from './schemas/order.schema';
+import { UserDocument } from 'src/users/schemas/user.schema';
+
 
 
 @Injectable()
 export class OrdersService {
   constructor(
-    @InjectModel('Order') private readonly orderModel: Model<Order>,
-    @InjectModel('User') private readonly userModel: Model<User>
+    @InjectModel('Order') private readonly orderModel: Model<OrderDocument>,
+    @InjectModel('User') private readonly userModel: Model<UserDocument>
   ) {}
 
   async create(userID: string, createOrderDto: CreateOrderDto): Promise<Order> {
@@ -28,22 +29,22 @@ export class OrdersService {
     return createdOrder.save();
   }
 
-  async findAll(): Promise<Order[]> {
+  async findAll(): Promise<Order[] | undefined> {
     return this.orderModel.find().exec();
   }
 
-  async findOne(orderID: number): Promise<Order> {
+  async findOne(orderID: number): Promise<Order | undefined> {
     const order = await this.orderModel.findById(orderID).exec();    
     return order;  
   }
 
-  async update(orderID: number, updateOrderDto: UpdateOrderDto): Promise<Order> {
-    const updatedOrder = await this.orderModel.findByIdAndUpdate(orderID, updateOrderDto, { new: true });  
+  async update(orderID: number, updateOrderDto: UpdateOrderDto): Promise<Order | undefined> {
+    const updatedOrder = await this.orderModel.findByIdAndUpdate(orderID, updateOrderDto, { new: true, useFindAndModify: false });  
     return updatedOrder;   
   }
 
   async remove(orderID: number): Promise<any> {
-    const deletedOrder = await this.orderModel.findByIdAndRemove(orderID);         
+    const deletedOrder = await this.orderModel.findByIdAndRemove(orderID, {useFindAndModify: false});         
     return deletedOrder; 
   }
 }

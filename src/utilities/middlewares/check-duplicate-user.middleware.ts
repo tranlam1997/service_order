@@ -2,12 +2,12 @@ import { Injectable, NestMiddleware } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Request, Response, NextFunction } from 'express';
 import { Model } from 'mongoose';
-import { User } from 'src/users/interfaces/user.interface';
+import { UserDocument } from 'src/users/schemas/user.schema';
 
 @Injectable()
 export class DuplicateCheckingMiddleware implements NestMiddleware {
     constructor(
-        @InjectModel('User') private readonly userModel: Model<User>,
+        @InjectModel('User') private readonly userModel: Model<UserDocument>,
       ) {}
 
   async use(req: Request, res: Response, next: NextFunction) {

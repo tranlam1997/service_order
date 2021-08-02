@@ -1,6 +1,6 @@
-import { Document, ObjectId } from 'mongoose';
+import { ObjectId } from 'mongoose'
 
-export interface Order extends Document {
+export interface Order {
   readonly userID: ObjectId;
   readonly orderDate: Date;
   readonly price: number;

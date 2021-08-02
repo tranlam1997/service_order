@@ -2,7 +2,7 @@ import { Controller, Get, Res, HttpStatus, NotFoundException, Put, Post, Body, P
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { ValidateObjectId } from '../shared/pipes/validate-object-id.pipe';
+import { ValidateObjectId } from '../utilities/pipes/validate-object-id.pipe';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Response } from 'express';   
 import { ApiBearerAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -40,7 +40,7 @@ export class OrdersController {
 
   @Get('/:id')
   @ApiParam({ name : 'id'})
-  @ApiResponse({ status: 201, description: 'Order found'})
+  @ApiResponse({ status: 200, description: 'Order found'})
   @ApiResponse({ status: 404, description: 'Order not found'})
   @ApiResponse({ status: 401, description: 'Unauthorized'})
   async findOne( @Res() res: Response , @Param('id', new ValidateObjectId()) id: any) {

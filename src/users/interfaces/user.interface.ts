@@ -1,9 +1,8 @@
-import { Document } from 'mongoose';
-
-export interface User extends Document {
-  readonly name: string,
-  readonly username: string,
-  readonly password: string,
-  readonly email: string,
-  readonly orders: string[]
+export interface User {
+   _id: string,
+   name: string,
+   username: string,
+   password: string,
+   email: string,
+   orders: string[]
 }

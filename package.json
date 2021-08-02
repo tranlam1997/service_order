@@ -21,6 +21,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@golevelup/nestjs-testing": "^0.1.2",
     "@nestjs/common": "^8.0.0",
     "@nestjs/config": "^1.0.1",
     "@nestjs/core": "^8.0.0",
@@ -30,9 +31,11 @@
     "@nestjs/passport": "^8.0.0",
     "@nestjs/platform-express": "^8.0.0",
     "@nestjs/swagger": "^5.0.8",
+    "@types/faker": "^5.5.7",
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
+    "faker": "^5.5.3",
     "joi": "^17.4.1",
     "mongoose": "^5.13.3",
     "passport": "^0.4.1",

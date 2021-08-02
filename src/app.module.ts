@@ -7,10 +7,10 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { APP_FILTER, APP_PIPE } from '@nestjs/core';
-import { ValidationPipe} from './shared/pipes/validation.pipe'
-import { DuplicateCheckingMiddleware } from './shared/middlewares/check-duplicate-user.middleware'
+import { ValidationPipe} from './utilities/pipes/validation.pipe'
+import { DuplicateCheckingMiddleware } from './utilities/middlewares/check-duplicate-user.middleware'
 import { UserSchema } from './users/schemas/user.schema';
-import { HttpExceptionFilter } from './shared/filters/http-exception.filter';
+import { HttpExceptionFilter } from './utilities/filters/http-exception.filter';
 
 
 @Module({
